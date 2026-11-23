@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Bounci Overlay</title>
+    <script type="module" crossorigin src="../assets/overlay.js"></script>
+    <link rel="modulepreload" crossorigin href="../assets/modulepreload-polyfill.js">
+    <link rel="modulepreload" crossorigin href="../assets/renderer.js">
+    <link rel="stylesheet" crossorigin href="../assets/overlay.css">
+  </head>
+  <body class="overlay-mode" data-mode="empty">
+    <div id="app">
+      <main class="stage" id="stage">
+        <!-- Top bar actions -->
+        <div class="fluffy-top-bar" id="bounciTitleBar">
+          <div class="fluffy-badge" id="bounciDragHandle" title="Drag to move overlay">
+            <span class="fluffy-badge-icon">🥟</span>
+            <span class="fluffy-badge-text">Bounci</span>
+          </div>
+          <div class="fluffy-drag-area" id="bounciDragArea" title="Drag to move overlay">
+            <span class="fluffy-drag-grip"></span>
+          </div>
+          <div class="fluffy-top-actions">
+            <button class="fluffy-action-btn" id="bounciBtnSound" title="Toggle Sound (M)" aria-label="Toggle Sound">
+              <span class="icon-sound">🔊</span>
+            </button>
+            <button class="fluffy-action-btn" id="bounciBtnStudio" title="Open in Full Bounci Studio" aria-label="Open Studio">
+              <span>↗</span>
+            </button>
+            <button class="fluffy-close-btn" id="bounciBtnClose" title="Close (Esc)" aria-label="Close">✕</button>
+          </div>
+        </div>
+
+        <!-- Fluffy Pill Controls -->
+        <nav class="fluffy-pill" id="bounciPill" aria-label="Controls">
+          <button class="fluffy-pill-btn active" id="bounciBtnPaint" title="Paint Squishy Mask (P / 1)">
+            <span class="fluffy-pill-icon">🖌️</span>
+            <span class="fluffy-pill-label">Paint</span>
+          </button>
+          <div class="fluffy-pill-slider-wrap" title="Brush Size (Scroll wheel to adjust, [ / ])">
+            <input type="range" class="fluffy-pill-slider" id="bounciBrushSize" min="0.01" max="0.25" step="0.005" value="0.07" title="Brush Size" />
+          </div>
+          <button class="fluffy-pill-btn fluffy-pill-btn-play" id="bounciBtnPlay" title="Squish Cheeks! (Space / S / 2)">
+            <span class="fluffy-pill-icon">✨</span>
+            <span class="fluffy-pill-label">Play!</span>
+          </button>
+          <button class="fluffy-pill-btn fluffy-pill-btn-sub" id="bounciBtnAllMochi" title="Make entire image squishy">
+            <span class="fluffy-pill-icon">🌟</span>
+            <span class="fluffy-pill-label">All</span>
+          </button>
+        </nav>
+
+        <!-- WebGL canvas -->
+        <canvas id="gl"></canvas>
+        <div id="brushCursor" class="brush-cursor" hidden></div>
+        <div id="brushPreview" class="brush-preview" hidden></div>
+
+        <button class="view-reset" id="btnResetView" hidden title="Reset View">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2.5 4.5v6H8.5" />
+            <path d="M4.5 15a8 8 0 1 0 1.9-8.4L2.5 10.5" />
+          </svg>
+        </button>
+
+        <!-- Empty state fallback if no image loaded yet -->
+        <div class="empty-state" id="emptyState">
+          <div class="dropcard">
+            <div class="dropcard-icon">🥟</div>
+            <p class="dropcard-title">Drop an image here</p>
+            <p class="dropcard-sub">or click to pick from file</p>
+            <div class="dropcard-actions">
+              <button class="btn btn-primary" id="btnPick">Select Image</button>
+              <button class="btn btn-ghost" id="btnSample">Try Sample</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="toast-area" id="toastArea"></div>
+      </main>
+    </div>
+
+    <input type="file" id="fileInput" accept="image/*" hidden />
+  </body>
+</html>
