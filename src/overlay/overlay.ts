@@ -118,7 +118,6 @@ class OverlayApp {
     const btnAll = document.getElementById('bounciBtnAllMochi') as HTMLButtonElement | null;
     const brushSize = document.getElementById('bounciBrushSize') as HTMLInputElement | null;
     const btnClose = document.getElementById('bounciBtnClose');
-    const btnSound = document.getElementById('bounciBtnSound');
     const btnStudio = document.getElementById('bounciBtnStudio');
     const btnPick = document.getElementById('btnPick');
     const btnSample = document.getElementById('btnSample');
@@ -152,15 +151,6 @@ class OverlayApp {
       this.close();
     });
 
-    btnSound?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      state.muted = !state.muted;
-      btnSound.classList.toggle('muted', state.muted);
-      const icon = btnSound.querySelector('.icon-sound');
-      if (icon) icon.textContent = state.muted ? '🔇' : '🔊';
-      this.toast(state.muted ? 'Sound Muted' : 'Sound Enabled');
-    });
-
     btnStudio?.addEventListener('click', (e) => {
       e.stopPropagation();
       this.openInStudio();
@@ -184,8 +174,6 @@ class OverlayApp {
       } else if (e.key === '2' || e.key.toLowerCase() === 's' || e.code === 'Space') {
         if (e.code === 'Space') e.preventDefault();
         this.enterPlay(false);
-      } else if (e.key === 'm' || e.key === 'M') {
-        btnSound?.click();
       } else if (e.key === '[') {
         if (brushSize) {
           brushSize.value = String(Math.max(0.01, parseFloat(brushSize.value) - 0.01));
@@ -324,7 +312,7 @@ class OverlayApp {
 
     document.getElementById('emptyState')!.hidden = true;
     events.emit('image');
-    setMode('paint');
+    this.enterPlay(true);
     this.afterViewChange();
   }
 

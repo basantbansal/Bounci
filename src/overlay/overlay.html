@@ -9,7 +9,7 @@
   <body class="overlay-mode" data-mode="empty">
     <div id="app">
       <main class="stage" id="stage">
-        <!-- Top bar actions -->
+        <!-- Thin top bar actions -->
         <div class="fluffy-top-bar" id="bounciTitleBar">
           <div class="fluffy-badge" id="bounciDragHandle" title="Drag to move overlay">
             <span class="fluffy-badge-icon">🥟</span>
@@ -19,26 +19,28 @@
             <span class="fluffy-drag-grip"></span>
           </div>
           <div class="fluffy-top-actions">
-            <button class="fluffy-action-btn" id="bounciBtnSound" title="Toggle Sound (M)" aria-label="Toggle Sound">
-              <span class="icon-sound">🔊</span>
-            </button>
             <button class="fluffy-action-btn" id="bounciBtnStudio" title="Open in Full Bounci Studio" aria-label="Open Studio">
               <span>↗</span>
             </button>
-            <button class="fluffy-close-btn" id="bounciBtnClose" title="Close (Esc)" aria-label="Close">✕</button>
+            <button class="fluffy-close-btn" id="bounciBtnClose" title="Close (Esc)" aria-label="Close">
+              <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" fill="none">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
           </div>
         </div>
 
-        <!-- Fluffy Pill Controls -->
+        <!-- Thin Fluffy Pill Controls -->
         <nav class="fluffy-pill" id="bounciPill" aria-label="Controls">
-          <button class="fluffy-pill-btn active" id="bounciBtnPaint" title="Paint Squishy Mask (P / 1)">
+          <button class="fluffy-pill-btn" id="bounciBtnPaint" title="Paint Squishy Mask (P / 1)">
             <span class="fluffy-pill-icon">🖌️</span>
             <span class="fluffy-pill-label">Paint</span>
           </button>
           <div class="fluffy-pill-slider-wrap" title="Brush Size (Scroll wheel to adjust, [ / ])">
             <input type="range" class="fluffy-pill-slider" id="bounciBrushSize" min="0.01" max="0.25" step="0.005" value="0.07" title="Brush Size" />
           </div>
-          <button class="fluffy-pill-btn fluffy-pill-btn-play" id="bounciBtnPlay" title="Squish Cheeks! (Space / S / 2)">
+          <button class="fluffy-pill-btn fluffy-pill-btn-play active" id="bounciBtnPlay" title="Squish Cheeks! (Space / S / 2)">
             <span class="fluffy-pill-icon">✨</span>
             <span class="fluffy-pill-label">Play!</span>
           </button>
@@ -54,7 +56,7 @@
         <div id="brushPreview" class="brush-preview" hidden></div>
 
         <button class="view-reset" id="btnResetView" hidden title="Reset View">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M2.5 4.5v6H8.5" />
             <path d="M4.5 15a8 8 0 1 0 1.9-8.4L2.5 10.5" />
           </svg>

@@ -113,9 +113,9 @@
     const defaultW = Math.min(480, window.innerWidth * 0.85);
     const defaultH = Math.min(380, window.innerHeight * 0.75);
     let w = preferredRect?.w ?? defaultW;
-    let h = preferredRect ? preferredRect.h + 50 : defaultH;
-    w = Math.max(280, Math.min(w, window.innerWidth - 40));
-    h = Math.max(220, Math.min(h, window.innerHeight - 40));
+    let h = preferredRect ? preferredRect.h + 20 : defaultH;
+    w = Math.max(220, Math.min(w, window.innerWidth - 40));
+    h = Math.max(160, Math.min(h, window.innerHeight - 40));
     widgetX = preferredRect ? preferredRect.x : (window.innerWidth - w) / 2;
     widgetY = preferredRect ? Math.max(10, preferredRect.y - 25) : (window.innerHeight - h) / 2;
     widgetX = Math.max(10, Math.min(widgetX, window.innerWidth - w - 10));

@@ -112,8 +112,9 @@ void main() {
   if (uMaskView > 0.5) {
     float m = texture(uMask, vUV).r;
     float mq = floor(m * 4.0 + 0.5) / 4.0;
-    c *= 0.45 + 0.4 * mq;
-    c += vec4(1.0, 0.55, 0.68, 1.0) * (0.35 * mq);
+    if (mq > 0.05) {
+      c.rgb = mix(c.rgb, vec3(1.0, 0.45, 0.65), 0.45 * mq);
+    }
   } else if (uPass < 0.5) {
     if (c.a < 0.95) discard;
   } else {

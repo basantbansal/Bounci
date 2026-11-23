@@ -45,11 +45,11 @@ function spawnFloatingWidget(imageUrl: string, preferredRect?: { x: number; y: n
   const defaultH = Math.min(380, window.innerHeight * 0.75);
 
   let w = preferredRect?.w ?? defaultW;
-  let h = preferredRect ? preferredRect.h + 50 : defaultH;
+  let h = preferredRect ? preferredRect.h + 20 : defaultH;
 
   // Clamp reasonable initial size
-  w = Math.max(280, Math.min(w, window.innerWidth - 40));
-  h = Math.max(220, Math.min(h, window.innerHeight - 40));
+  w = Math.max(220, Math.min(w, window.innerWidth - 40));
+  h = Math.max(160, Math.min(h, window.innerHeight - 40));
 
   widgetX = preferredRect ? preferredRect.x : (window.innerWidth - w) / 2;
   widgetY = preferredRect ? Math.max(10, preferredRect.y - 25) : (window.innerHeight - h) / 2;
