@@ -80,6 +80,8 @@
   var activeWidget = null;
   var widgetX = 0;
   var widgetY = 0;
+  var widgetW = 300;
+  var widgetH = 220;
   var pendingDx = 0;
   var pendingDy = 0;
   var rafMoveId = null;
@@ -89,9 +91,7 @@
     widgetY += pendingDy;
     pendingDx = 0;
     pendingDy = 0;
-    const w = activeWidget.offsetWidth || 300;
-    const h = activeWidget.offsetHeight || 220;
-    widgetX = Math.max(-w + 80, Math.min(widgetX, window.innerWidth - 80));
+    widgetX = Math.max(-widgetW + 80, Math.min(widgetX, window.innerWidth - 80));
     widgetY = Math.max(0, Math.min(widgetY, window.innerHeight - 40));
     activeWidget.style.transform = `translate3d(${Math.round(widgetX)}px, ${Math.round(widgetY)}px, 0)`;
     rafMoveId = null;
@@ -113,11 +113,13 @@
     const defaultW = Math.min(480, window.innerWidth * 0.85);
     const defaultH = Math.min(380, window.innerHeight * 0.75);
     let w = preferredRect?.w ?? defaultW;
-    let h = preferredRect ? preferredRect.h + 20 : defaultH;
-    w = Math.max(220, Math.min(w, window.innerWidth - 40));
-    h = Math.max(160, Math.min(h, window.innerHeight - 40));
+    let h = preferredRect?.h ?? defaultH;
+    w = Math.max(160, Math.min(w, window.innerWidth - 20));
+    h = Math.max(120, Math.min(h, window.innerHeight - 20));
+    widgetW = w;
+    widgetH = h;
     widgetX = preferredRect ? preferredRect.x : (window.innerWidth - w) / 2;
-    widgetY = preferredRect ? Math.max(10, preferredRect.y - 25) : (window.innerHeight - h) / 2;
+    widgetY = preferredRect ? preferredRect.y : (window.innerHeight - h) / 2;
     widgetX = Math.max(10, Math.min(widgetX, window.innerWidth - w - 10));
     widgetY = Math.max(10, Math.min(widgetY, window.innerHeight - h - 10));
     pendingDx = 0;
@@ -166,14 +168,13 @@
         canvas.width = Math.max(1, Math.round(rect.w * scaleX));
         canvas.height = Math.max(1, Math.round(rect.h * scaleY));
         const ctx = canvas.getContext("2d");
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = "high";
+        ctx.imageSmoothingEnabled = false;
         ctx.drawImage(
           img,
-          rect.x * scaleX,
-          rect.y * scaleY,
-          rect.w * scaleX,
-          rect.h * scaleY,
+          Math.round(rect.x * scaleX),
+          Math.round(rect.y * scaleY),
+          canvas.width,
+          canvas.height,
           0,
           0,
           canvas.width,

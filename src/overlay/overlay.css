@@ -86,9 +86,7 @@ body[data-mode='play'] #gl:active {
   align-items: center;
   gap: 4px;
   padding: 2px 7px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: #ffffff;
   border: 1px dashed rgba(255, 126, 179, 0.85);
   border-radius: 9999px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
@@ -235,9 +233,7 @@ body.overlay-mode[data-mode='play'] .fluffy-top-bar:hover {
   white-space: nowrap;
   gap: 5px;
   padding: 3px 8px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: #ffffff;
   border: 1px dashed rgba(255, 126, 179, 0.8);
   border-radius: 9999px;
   box-shadow: 0 2px 12px rgba(224, 99, 127, 0.2);
@@ -380,8 +376,7 @@ body.overlay-mode[data-mode='play'] .fluffy-top-bar:hover {
   height: 30px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
+  background: #ffffff;
   color: #7a6369;
   display: flex;
   align-items: center;
@@ -396,8 +391,7 @@ body.overlay-mode[data-mode='play'] .fluffy-top-bar:hover {
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgba(255, 245, 247, 0.95);
-  backdrop-filter: blur(8px);
+  background: #fff5f7;
   z-index: 20;
 }
 
@@ -467,8 +461,7 @@ body.overlay-mode[data-mode='play'] .fluffy-top-bar:hover {
 
 .toast {
   padding: 6px 14px;
-  background: rgba(60, 40, 48, 0.85);
-  backdrop-filter: blur(8px);
+  background: #3c2830;
   color: #ffffff;
   font-size: 12px;
   font-weight: 600;

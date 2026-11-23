@@ -187,12 +187,24 @@ class OverlayApp {
       }
     });
 
-    // Header drag handle communicates move to parent window smoothly
+    // Header drag handle communicates move to parent window smoothly with RAF throttling
     const dragHandle = document.getElementById('bounciDragHandle');
     const dragArea = document.getElementById('bounciDragArea');
     let isDragging = false;
     let lastScreenX = 0;
     let lastScreenY = 0;
+    let pendingMsgDx = 0;
+    let pendingMsgDy = 0;
+    let dragRafId: number | null = null;
+
+    const flushMove = () => {
+      if (pendingMsgDx !== 0 || pendingMsgDy !== 0) {
+        window.parent.postMessage({ type: 'BOUNCI_MOVE', dx: pendingMsgDx, dy: pendingMsgDy }, '*');
+        pendingMsgDx = 0;
+        pendingMsgDy = 0;
+      }
+      dragRafId = null;
+    };
 
     const onPointerMove = (e: PointerEvent) => {
       if (!isDragging) return;
@@ -200,14 +212,21 @@ class OverlayApp {
       const dy = e.screenY - lastScreenY;
       lastScreenX = e.screenX;
       lastScreenY = e.screenY;
-      if (dx !== 0 || dy !== 0) {
-        window.parent.postMessage({ type: 'BOUNCI_MOVE', dx, dy }, '*');
+      pendingMsgDx += dx;
+      pendingMsgDy += dy;
+      if (!dragRafId) {
+        dragRafId = requestAnimationFrame(flushMove);
       }
     };
 
     const stopDragging = () => {
       if (!isDragging) return;
       isDragging = false;
+      if (dragRafId) {
+        cancelAnimationFrame(dragRafId);
+        dragRafId = null;
+      }
+      flushMove();
       document.body.classList.remove('is-dragging');
       window.parent.postMessage({ type: 'BOUNCI_DRAG_END' }, '*');
       window.removeEventListener('pointermove', onPointerMove, { capture: true });
@@ -222,6 +241,8 @@ class OverlayApp {
       isDragging = true;
       lastScreenX = e.screenX;
       lastScreenY = e.screenY;
+      pendingMsgDx = 0;
+      pendingMsgDy = 0;
       document.body.classList.add('is-dragging');
       try {
         (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);

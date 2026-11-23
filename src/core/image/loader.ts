@@ -46,7 +46,11 @@ export async function decodeToCanvas(sourceObj: Blob | HTMLImageElement | ImageB
   canvas.width = w;
   canvas.height = h;
   const ctx = canvas.getContext('2d')!;
-  ctx.imageSmoothingQuality = 'high';
+  if (w === sw && h === sh) {
+    ctx.imageSmoothingEnabled = false;
+  } else {
+    ctx.imageSmoothingQuality = 'high';
+  }
   ctx.drawImage(source, 0, 0, w, h);
   if ('close' in source && typeof (source as ImageBitmap).close === 'function') {
     (source as ImageBitmap).close();
