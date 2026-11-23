@@ -90,6 +90,30 @@ class OverlayApp {
     });
     events.on('params', () => (this.needsRender = true));
 
+    // Sync preferences with extension storage in real-time
+    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.get(['bounci_softness', 'bounci_muted'], (res) => {
+        if (res.bounci_softness !== undefined) {
+          state.softness = res.bounci_softness;
+          this.pinch.updateParams();
+        }
+        if (res.bounci_muted !== undefined) {
+          state.muted = Boolean(res.bounci_muted);
+        }
+      });
+      chrome.storage.onChanged?.addListener((changes, area) => {
+        if (area === 'local') {
+          if (changes.bounci_softness) {
+            state.softness = changes.bounci_softness.newValue;
+            this.pinch.updateParams();
+          }
+          if (changes.bounci_muted) {
+            state.muted = Boolean(changes.bounci_muted.newValue);
+          }
+        }
+      });
+    }
+
     // Handle messages from host container or extension
     window.addEventListener('message', (e) => {
       if (!e.data || typeof e.data !== 'object') return;
@@ -118,9 +142,15 @@ class OverlayApp {
     const btnAll = document.getElementById('bounciBtnAllMochi') as HTMLButtonElement | null;
     const brushSize = document.getElementById('bounciBrushSize') as HTMLInputElement | null;
     const btnClose = document.getElementById('bounciBtnClose');
+    const btnSnapshot = document.getElementById('bounciBtnSnapshot');
     const btnStudio = document.getElementById('bounciBtnStudio');
     const btnPick = document.getElementById('btnPick');
     const btnSample = document.getElementById('btnSample');
+
+    btnSnapshot?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.snapshot();
+    });
 
     btnPaint?.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -174,6 +204,8 @@ class OverlayApp {
       } else if (e.key === '2' || e.key.toLowerCase() === 's' || e.code === 'Space') {
         if (e.code === 'Space') e.preventDefault();
         this.enterPlay(false);
+      } else if (e.key === 'c' || e.key === 'C') {
+        this.snapshot();
       } else if (e.key === '[') {
         if (brushSize) {
           brushSize.value = String(Math.max(0.01, parseFloat(brushSize.value) - 0.01));
@@ -256,6 +288,48 @@ class OverlayApp {
 
     dragHandle?.addEventListener('pointerdown', startDragging);
     dragArea?.addEventListener('pointerdown', startDragging);
+
+    // Double click title bar to center widget
+    const titleBar = document.getElementById('bounciTitleBar');
+    titleBar?.addEventListener('dblclick', (e) => {
+      if ((e.target as HTMLElement).closest('.fluffy-top-actions') || (e.target as HTMLElement).closest('button')) return;
+      window.parent.postMessage({ type: 'BOUNCI_CENTER' }, '*');
+    });
+
+    // Drag and drop image files directly onto overlay
+    window.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+    });
+
+    window.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const files = e.dataTransfer?.files;
+      if (files && files.length > 0) {
+        const file = files[0];
+        if (file.type.startsWith('image/')) {
+          void this.loadBlob(file);
+          this.toast('Image loaded! ✨');
+        }
+      }
+    });
+
+    // Paste image from clipboard (Ctrl + V)
+    window.addEventListener('paste', (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          const blob = item.getAsFile();
+          if (blob) {
+            void this.loadBlob(blob);
+            this.toast('Pasted image from clipboard! 📋✨');
+            e.preventDefault();
+            break;
+          }
+        }
+      }
+    });
   }
 
   private updateModeUI(): void {
@@ -272,6 +346,30 @@ class OverlayApp {
 
   private close(): void {
     window.parent.postMessage({ type: 'BOUNCI_CLOSE' }, '*');
+  }
+
+  private snapshot(): void {
+    if (!this.canvas) return;
+    try {
+      this.canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob }),
+          ]);
+          this.toast('Snapshot copied to clipboard! 📋✨');
+        } catch {
+          // Fallback: download as PNG file
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `bounci-${Date.now()}.png`;
+          a.click();
+          this.toast('Snapshot saved as PNG! 📸✨');
+        }
+      }, 'image/png');
+    } catch {
+      this.toast('Could not take snapshot');
+    }
   }
 
   private openInStudio(): void {

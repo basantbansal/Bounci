@@ -91,3 +91,27 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     sendResponse({ ok: true });
   }
 });
+chrome.commands.onCommand.addListener(async (command) => {
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const tab = tabs[0];
+  if (!tab?.id) return;
+  if (command === "snip-area") {
+    try {
+      await chrome.scripting.insertCSS({
+        target: { tabId: tab.id },
+        files: ["content/content.css"]
+      }).catch(() => {
+      });
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ["content/content.js"]
+      }).catch(() => {
+      });
+      chrome.tabs.sendMessage(tab.id, { type: "BOUNCI_START_SNIP" });
+    } catch (e) {
+      console.warn("Command execution failed:", e);
+    }
+  } else if (command === "open-studio") {
+    chrome.tabs.create({ url: chrome.runtime.getURL("studio/studio.html") });
+  }
+});

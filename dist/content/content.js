@@ -154,6 +154,10 @@
       if (!rafMoveId) {
         rafMoveId = requestAnimationFrame(applyWidgetPosition);
       }
+    } else if (e.data.type === "BOUNCI_CENTER" && activeWidget) {
+      widgetX = (window.innerWidth - widgetW) / 2;
+      widgetY = (window.innerHeight - widgetH) / 2;
+      activeWidget.style.transform = `translate3d(${Math.round(widgetX)}px, ${Math.round(widgetY)}px, 0)`;
     } else if (e.data.type === "BOUNCI_OPEN_STUDIO") {
       chrome.runtime.sendMessage({ type: "BOUNCI_OPEN_STUDIO" });
     }

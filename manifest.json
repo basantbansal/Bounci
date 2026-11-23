@@ -29,6 +29,22 @@
       "128": "icons/icon128.png"
     }
   },
+  "commands": {
+    "snip-area": {
+      "suggested_key": {
+        "default": "Alt+Shift+S",
+        "mac": "Alt+Shift+S"
+      },
+      "description": "Snip and squish webpage region"
+    },
+    "open-studio": {
+      "suggested_key": {
+        "default": "Alt+Shift+B",
+        "mac": "Alt+Shift+B"
+      },
+      "description": "Open Bounci Studio playground"
+    }
+  },
   "background": {
     "service_worker": "background.js",
     "type": "module"
